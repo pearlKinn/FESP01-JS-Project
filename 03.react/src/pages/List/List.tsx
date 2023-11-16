@@ -1,8 +1,12 @@
 import instance from "@/api/instance";
 import { Header } from "@/layout/Header/Header";
 import styles from "@/pages/List/List.module.css";
-import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faPenToSquare,
+  faPlus,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -19,7 +23,6 @@ export const List = () => {
     try {
       const response = await instance.get<TodoListResponse>("/");
       setData(response.data);
-
       return response.data;
     } catch (error) {
       console.error(error);
@@ -37,6 +40,7 @@ export const List = () => {
       const updatedItem = { ...isItemChecked, done: !isItemChecked.done };
       try {
         await instance.patch(`/${id}`, updatedItem);
+
         if (filterState) {
           setNotCompletedItem((prevData) => {
             if (!prevData) return prevData;
@@ -45,7 +49,6 @@ export const List = () => {
             );
             return updatedItems;
           });
-          console.log(notCompletedItem);
         } else {
           setData((prevData) => {
             if (!prevData) return prevData;
@@ -61,172 +64,144 @@ export const List = () => {
     }
   };
 
-  const handleTodoDelete = function (id: number) {
-    const deleteItem = async function () {
-      try {
-        await instance.delete<TodoResponse>(`/${id}`);
-        setData((prevData) => {
-          const updatedItems = prevData?.items?.filter(
-            (item) => item._id !== id
-          );
-          return { ...prevData, items: updatedItems };
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    deleteItem();
-  };
-
-  const handleFilter = function (e: { preventDefault: () => void }) {
-    e.preventDefault();
-    const filteredItems: TodoItem[] | undefined = data?.items?.filter(
-      (item: TodoItem) => !item.done
-    );
-    setFilterState(!filterState);
-    if (!filterState) {
-      setNotCompletedItem(filteredItems);
-    } else {
-      fetchData();
+  const handleTodoDelete = async function (id: number) {
+    try {
+      await instance.delete<TodoResponse>(`/${id}`);
+      setData((prevData) => {
+        const updatedItems = prevData?.items?.filter((item) => item._id !== id);
+        return { ...prevData, items: updatedItems };
+      });
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const handleSearchedItem = function () {
-    if (!searchTerm) {
-      setFilterState(false);
-      setNotCompletedItem(undefined);
+  const handleTodoFilter = function (e: { preventDefault: () => void }) {
+    e.preventDefault();
+    if (filterState) {
+      fetchData();
     } else {
       const filteredItems: TodoItem[] | undefined = data?.items?.filter(
-        (item: TodoItem) =>
-          item.title.includes(searchTerm) || item.content.includes(searchTerm)
+        (item: TodoItem) => !item.done
       );
-      console.log(filteredItems);
-      setFilterState(true);
-      // setData(filteredItems);
+      setNotCompletedItem(filteredItems);
     }
+    setFilterState(!filterState);
   };
 
-  if (data) {
-    return (
-      <div>
-        <Header>TODO App</Header>
-        <div id={styles.content}>
-          <div className={styles.optionBtnWrapper}>
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className={styles.searchBtn}
-              onClick={handleSearchedItem}
-            />
-            <input
-              type="text"
-              placeholder="검색어를 입력하세요"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                console.log(searchTerm);
-              }}
-            />
-            <Link to="/regist" className={styles.registBtn}>
-              <FontAwesomeIcon style={{ color: "black" }} icon={faPlus} />
-            </Link>
-          </div>
+  const filteredItems: TodoItem[] | undefined = data?.items?.filter(
+    (todoItem) => todoItem.title.includes(searchTerm.toLowerCase())
+  );
 
-          <ul className={styles.todoList}>
-            {filterState
-              ? notCompletedItem?.map((item: TodoItem, i: number) => {
-                  return (
-                    <li
-                      key={`${item._id}-${i}`}
-                      className={styles.todoListItem}
-                    >
-                      <div className={styles.itemWrapper}>
-                        <input
-                          type="checkbox"
-                          onChange={() => handleCheckTodo(item._id)}
-                          checked={item.done}
-                        />
-                        <Link
-                          to={`/info/${item._id}`}
-                          className={
-                            item.done
-                              ? styles.doneItemLink
-                              : styles.undoItemLink
-                          }
-                        >
-                          {item.title}
-                        </Link>
-                      </div>
-                      <div className={styles.todoActionWrapper}>
-                        <Link to={`/update/${item._id}`}>
-                          <FontAwesomeIcon
-                            style={{ color: "black" }}
-                            icon={faPenToSquare}
-                          />
-                        </Link>
-                        <button
-                          title="삭제"
-                          className={styles.deleteBtn}
-                          onClick={() => handleTodoDelete(item._id)}
-                        >
-                          <FontAwesomeIcon
-                            style={{ color: "black" }}
-                            icon={faTrashCan}
-                          />
-                        </button>
-                      </div>
-                    </li>
-                  );
-                })
-              : data?.items?.map((item, i) => {
-                  return (
-                    <li
-                      key={`${item._id}-${i}`}
-                      className={styles.todoListItem}
-                    >
-                      <div className={styles.itemWrapper}>
-                        <input
-                          type="checkbox"
-                          onChange={() => handleCheckTodo(item._id)}
-                          checked={item.done}
-                        />
-                        <Link
-                          to={`/info/${item._id}`}
-                          className={
-                            item.done
-                              ? styles.doneItemLink
-                              : styles.undoItemLink
-                          }
-                        >
-                          {item.title}
-                        </Link>
-                      </div>
-                      <div className={styles.todoActionWrapper}>
-                        <Link to={`/update/${item._id}`}>
-                          <FontAwesomeIcon
-                            style={{ color: "black" }}
-                            icon={faPenToSquare}
-                          />
-                        </Link>
-                        <button
-                          title="삭제"
-                          className={styles.deleteBtn}
-                          onClick={() => handleTodoDelete(item._id)}
-                        >
-                          <FontAwesomeIcon
-                            style={{ color: "black" }}
-                            icon={faTrashCan}
-                          />
-                        </button>
-                      </div>
-                    </li>
-                  );
-                })}
-          </ul>
-          <button className={styles.filterBtn} onClick={handleFilter}>
-            {filterState ? "전체보기" : "미완료 항목 보기"}
-          </button>
+  return (
+    <div>
+      <Header>TODO App</Header>
+      <div id={styles.content}>
+        <div className={styles.optionBtnWrapper}>
+          {filterState ? (
+            ""
+          ) : (
+            <div className={styles.searchBar}>
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className={styles.searchIcon}
+              />
+              <form action="">
+                <input
+                  type="text"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="할일 검색"
+                  className={styles.searchInput}
+                />
+              </form>
+            </div>
+          )}
+          <Link to="/regist" className={styles.registBtn}>
+            <FontAwesomeIcon className={styles.plusIcon} icon={faPlus} />
+          </Link>
         </div>
+
+        <ul className={styles.todoList}>
+          {filterState
+            ? notCompletedItem?.map((item: TodoItem, i: number) => (
+                <li key={`${item._id}-${i}`} className={styles.todoListItem}>
+                  <div className={styles.itemWrapper}>
+                    <input
+                      type="checkbox"
+                      onChange={() => handleCheckTodo(item._id)}
+                      checked={item.done}
+                    />
+                    <Link
+                      to={`/info/${item._id}`}
+                      className={
+                        item.done ? styles.doneItemLink : styles.undoItemLink
+                      }
+                    >
+                      {item.title}
+                    </Link>
+                  </div>
+                  <div className={styles.todoActionWrapper}>
+                    <Link to={`/update/${item._id}`}>
+                      <FontAwesomeIcon
+                        style={{ color: "black" }}
+                        icon={faPenToSquare}
+                      />
+                    </Link>
+                    <button
+                      title="삭제"
+                      className={styles.deleteBtn}
+                      onClick={() => handleTodoDelete(item._id)}
+                    >
+                      <FontAwesomeIcon
+                        style={{ color: "black" }}
+                        icon={faTrashCan}
+                      />
+                    </button>
+                  </div>
+                </li>
+              ))
+            : filteredItems?.map((item, i) => (
+                <li key={`${item._id}-${i}`} className={styles.todoListItem}>
+                  <div className={styles.itemWrapper}>
+                    <input
+                      type="checkbox"
+                      onChange={() => handleCheckTodo(item._id)}
+                      checked={item.done}
+                    />
+                    <Link
+                      to={`/info/${item._id}`}
+                      className={
+                        item.done ? styles.doneItemLink : styles.undoItemLink
+                      }
+                    >
+                      {item.title}
+                    </Link>
+                  </div>
+                  <div className={styles.todoActionWrapper}>
+                    <Link to={`/update/${item._id}`}>
+                      <FontAwesomeIcon
+                        style={{ color: "black" }}
+                        icon={faPenToSquare}
+                      />
+                    </Link>
+                    <button
+                      title="삭제"
+                      className={styles.deleteBtn}
+                      onClick={() => handleTodoDelete(item._id)}
+                    >
+                      <FontAwesomeIcon
+                        style={{ color: "black" }}
+                        icon={faTrashCan}
+                      />
+                    </button>
+                  </div>
+                </li>
+              ))}
+        </ul>
+        <button className={styles.filterBtn} onClick={handleTodoFilter}>
+          {filterState ? "전체보기" : "미완료 항목 보기"}
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
 };
