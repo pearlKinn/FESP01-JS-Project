@@ -4,7 +4,7 @@
   margin: 0 auto;
 }
 .todoList {
-  margin: 50px auto 0 auto;
+  margin: 0 auto;
   border-radius: 30px;
   border: #99ccff 1px solid;
   background: #fff;
@@ -57,9 +57,9 @@
 
 .registBtn {
   color: #000;
-  position: absolute;
-  top: -40px;
-  right: 0;
+  /* position: absolute; */
+  /* top: -40px;
+  right: 0; */
 }
 
 input[type="checkbox"] {
@@ -83,4 +83,28 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+.filterBtn {
+  background: transparent;
+  border: 1px solid #6aa7e5;
+  border-radius: 30px;
+  margin-top: 20px;
+  color: #000;
+}
+
+.filterBtn:hover {
+  background: #6aa7e5;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  margin-top: 20px;
+  color: #fffeeb;
+}
+.searchBtn {
+  color: black;
+  align-self: center;
+}
+.optionBtnWrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: end;
 }
