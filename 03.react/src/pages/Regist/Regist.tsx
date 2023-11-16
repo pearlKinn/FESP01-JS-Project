@@ -23,6 +23,7 @@ export const Regist = () => {
       .post("", {
         title: title,
         content: content,
+        done: false,
       })
       .then(() => {
         window.location.href = "/";
