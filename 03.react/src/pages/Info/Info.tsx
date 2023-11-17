@@ -40,12 +40,6 @@ export const Info = () => {
       <Header>TODO App 상세 조회</Header>
       <div className={styles.contentWrapper}>
         <ul className={styles.todoListWrapper}>
-          {/* {data?.item &&
-            Object.entries(data.item).map(([key, value]) => (
-              <li key={key}>
-                <div>{`${key}: ${value}`}</div>
-              </li>
-            ))} */}
           <li>
             <div>제목: {todoData.title}</div>
           </li>

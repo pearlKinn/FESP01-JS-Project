@@ -4,6 +4,8 @@
   text-align: center;
   width: 300px;
   font-size: 30px;
-  padding: 20px 0;
+  padding: 5px 0;
+  margin-bottom: 20px;
   color: black;
+  border-bottom: 3px solid #6aa7e5;
 }

@@ -11,6 +11,7 @@
   background: #fff;
   list-style: none;
   padding: 20px 30px;
+  max-width: 600px;
 }
 .todoItem {
   padding-left: 0;
