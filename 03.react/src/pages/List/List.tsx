@@ -104,7 +104,7 @@ export const List = () => {
             <div className={styles.searchBar}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
-                className={styles.searchIcon}
+                className={styles.fontAwesomeIcon}
               />
               <form action="">
                 <input
@@ -117,7 +117,7 @@ export const List = () => {
             </div>
           )}
           <Link to="/regist" className={styles.registBtn}>
-            <FontAwesomeIcon className={styles.plusIcon} icon={faPlus} />
+            <FontAwesomeIcon className={styles.fontAwesomeIcon} icon={faPlus} />
           </Link>
         </div>
 
@@ -143,7 +143,7 @@ export const List = () => {
                   <div className={styles.todoActionWrapper}>
                     <Link to={`/update/${item._id}`}>
                       <FontAwesomeIcon
-                        style={{ color: "black" }}
+                        className={styles.fontAwesomeIcon}
                         icon={faPenToSquare}
                       />
                     </Link>
@@ -153,7 +153,7 @@ export const List = () => {
                       onClick={() => handleTodoDelete(item._id)}
                     >
                       <FontAwesomeIcon
-                        style={{ color: "black" }}
+                        className={styles.fontAwesomeIcon}
                         icon={faTrashCan}
                       />
                     </button>
@@ -180,7 +180,7 @@ export const List = () => {
                   <div className={styles.todoActionWrapper}>
                     <Link to={`/update/${item._id}`}>
                       <FontAwesomeIcon
-                        style={{ color: "black" }}
+                        className={styles.fontAwesomeIcon}
                         icon={faPenToSquare}
                       />
                     </Link>
@@ -190,7 +190,7 @@ export const List = () => {
                       onClick={() => handleTodoDelete(item._id)}
                     >
                       <FontAwesomeIcon
-                        style={{ color: "black" }}
+                        className={styles.fontAwesomeIcon}
                         icon={faTrashCan}
                       />
                     </button>

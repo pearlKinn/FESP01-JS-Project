@@ -95,10 +95,7 @@ input[type="checkbox"] {
   margin-bottom: 10px;
   width: 500px;
 }
-.searchIcon {
-  color: black;
-  align-self: center;
-}
+
 .searchInput {
   min-width: 200px;
   flex-grow: 1;
@@ -108,7 +105,7 @@ input[type="checkbox"] {
   border-radius: 30px;
   border: 1px solid #6aa7e5;
 }
-.plusIcon {
+.fontAwesomeIcon {
   color: black;
   align-self: center;
 }
